@@ -1,0 +1,238 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+public class Controlador implements Isistema{
+	private static Controlador miInstancia;
+	private Reportes misReportes;
+	ArrayList<Usuario> listaUsuarios = new ArrayList<>();
+	ArrayList<Curso> listaCursos = new ArrayList<>();
+	ArrayList<Certificaciones> listaCertificaciones = new ArrayList<>();
+	
+	private Controlador(){
+		this.misReportes = new Reportes();
+	}
+	
+	public static Controlador getInstance() {
+		if(miInstancia == null) {
+			miInstancia = new Controlador();
+		}
+		return miInstancia;
+	}
+	@Override
+	public void cargarUsuarios(String[] partes,String rol) {
+		// TODO Auto-generated method stub
+		Usuario u = FactoryUsuario.crearU(partes,rol);
+		listaUsuarios.add(u);
+	}
+	@Override
+	public void cargarEstudiantes(String[] partes, String rol) {
+		// TODO Auto-generated method stub
+		Usuario e = FactoryUsuario.crearU(partes, rol);
+		listaUsuarios.add(e);
+	}
+
+	@Override
+	public Usuario buscarUsuarioNombre(String nombre) {
+		// TODO Auto-generated method stub
+		for (Usuario u : listaUsuarios) {
+			if(u.getNombre().equalsIgnoreCase(nombre)) {
+				return u;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void mostrarUsuarios() {
+		// TODO Auto-generated method stub
+		for (Usuario usuario : listaUsuarios) {
+			System.out.println(usuario.toString());
+		}
+	}
+
+	@Override
+	public void cargarCursos(String[] partes) {
+		// TODO Auto-generated method stub
+		Curso c = new Curso(partes[0],partes[1],Integer.parseInt(partes[2]),Integer.parseInt(partes[3]),partes[4]);
+		listaCursos.add(c);
+		if(partes.length>5) {
+			String preRequisito = partes[5];
+			c.agregarCursosPreRequisitos(preRequisito);
+		}
+		
+	}
+
+	@Override
+	public void mostrarCursos() {
+		// TODO Auto-generated method stub
+		for (Curso curso : listaCursos) {
+			System.out.println(curso.toString());
+		}
+	}
+
+	@Override
+	public void cargarNotas(String[] partes) {
+		// TODO Auto-generated method stub
+		Notas n = new Notas(partes[0], partes[1],Double.parseDouble(partes[2]), partes[3], partes[4]);
+		String rut = n.getRutEstudiante();
+		Usuario e = buscarUserRut(rut);
+		if(e instanceof Estudiante && e !=null) {
+			((Estudiante) e).agregarNota(n);
+		}else {
+			System.out.println("ERROR NO ES ESTUDIANTE");
+		}
+	}
+
+	@Override
+	public Usuario buscarUserRut(String rut) {
+		// TODO Auto-generated method stub
+		for (Usuario u : listaUsuarios) {
+			if(u instanceof Estudiante) {
+				if(((Estudiante) u).getRut().equalsIgnoreCase(rut)) {
+					return u;
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void cargarCertficaciones(String[] partes) {
+		// TODO Auto-generated method stub
+		Certificaciones c = FactoryCertificaciones.crear(partes);
+		listaCertificaciones.add(c);
+	}
+
+	@Override
+	public void mostrarCertficaciones() {
+		// TODO Auto-generated method stub
+		for (Certificaciones certificaciones : listaCertificaciones) {
+			System.out.println(certificaciones.toString());
+		}
+	}
+
+	@Override
+	public void cargarRegistros(String[] partes) {
+		// TODO Auto-generated method stub
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    
+	    // Usamos ese formato para setear o parsear como se prefiera decirle porque sino da error
+	    LocalDate fecha = LocalDate.parse(partes[2], formato);
+		Registros r = new Registros(partes[0], partes[1],fecha,partes[3],Integer.parseInt(partes[4]));
+		Usuario u = buscarUserRut(r.getRutEstudiante());
+		if(u instanceof Estudiante && u!=null) {
+			((Estudiante) u).agregarCertificacion(r);
+		}
+		
+	}
+
+	@Override
+	public void cargarMateriasCertificaciones(String[] partes) {
+		// TODO Auto-generated method stub
+		Certificaciones certificacion = buscarCertificaciones(partes[0]);
+		Curso curso = buscarCurso(partes[1]);
+		certificacion.agregarLista(curso);
+	}
+
+	@Override
+	public Curso buscarCurso(String codigo) {
+		// TODO Auto-generated method stub
+		for (Curso c : listaCursos) {
+			if(c.getCodigo().equalsIgnoreCase(codigo)) {
+				return c;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Certificaciones buscarCertificaciones(String id) {
+		// TODO Auto-generated method stub
+		for (Certificaciones certificaciones : listaCertificaciones) {
+			if(certificaciones.getId().equalsIgnoreCase(id)) {
+				return certificaciones;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void crearUsuarioManual() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void modificarCuenta(String nombre, int tipo) {
+		// TODO Auto-generated method stub
+		if(tipo==1) {
+			Estudiante e = buscarE(nombre);
+			
+		}else if(tipo==2) {
+			Usuario c = buscarUsuarioNombre(nombre);
+		}
+	}
+
+	@Override
+	public void eliminarCuenta(String nombre, int tipo) {
+		// TODO Auto-generated method stub
+		if(tipo==1) {
+			Estudiante e = buscarE(nombre);
+			listaUsuarios.remove(e);
+		}else if(tipo==2) {
+			Usuario c = buscarUsuarioNombre(nombre);
+			listaUsuarios.remove(c);
+		}
+	}
+
+	@Override
+	public void rrestablecerContraseña(String nombre, int tipo,String pass) {
+		// TODO Auto-generated method stub
+		if(tipo==1) {
+			Estudiante e = buscarE(nombre);
+			e.setPassword(pass);
+		}else if(tipo==2) {
+			Usuario c = buscarUsuarioNombre(nombre);
+			c.setPassword(pass);
+		}
+	}
+
+	@Override
+	public Estudiante buscarE(String n) {
+		// TODO Auto-generated method stub
+		for (Usuario u : listaUsuarios) {
+			if(u instanceof Estudiante) {
+				if(((Estudiante) u).getRut().equalsIgnoreCase(n)) {
+					return (Estudiante) u;
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Cordinador buscarC(String n) {
+		// TODO Auto-generated method stub
+		for (Usuario u : listaUsuarios) {
+			if(u instanceof Cordinador) {
+				Cordinador c = (Cordinador)u;
+				if(c.getNombre().equalsIgnoreCase(n)) {
+					return c;
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void aplicarEstrategia(int i) {
+		// TODO Auto-generated method stub
+		if(i==1) {
+			misReportes.setMiEstrategia(new AnalisiInscripcion());
+		}
+	}
+
+
+
+}

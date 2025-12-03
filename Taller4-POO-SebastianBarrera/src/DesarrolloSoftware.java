@@ -1,0 +1,15 @@
+
+public class DesarrolloSoftware extends Certificaciones  {
+
+	public DesarrolloSoftware(String id, String nombre, String descripcion, int minCreditos, int yearsValides) {
+		super(id, nombre, descripcion, minCreditos, yearsValides);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void aceptar(Visitor v) {
+		// TODO Auto-generated method stub
+		v.visitar(this);
+	}
+
+}
