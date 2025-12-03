@@ -17,9 +17,9 @@ public class Main {
 		c.mostrarUsuarios();
 		c.mostrarCursos();
 		c.mostrarCertficaciones();
-
+ 
 	}
-
+//lectura de arch
 	public static void LeerUsuarios(Controlador c) throws FileNotFoundException {
 		File arch = new File("usuarios.txt");
 		Scanner lector = new Scanner(arch);
