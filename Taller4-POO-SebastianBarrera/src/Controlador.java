@@ -10,6 +10,7 @@ public class Controlador implements Isistema{
 	private GestionCertificaciones gesCertificaciones;
 	private GestionEstudiantes gesEstudiantes;
 	private VisualizacionPerfilEstudiante VPerfilEstudiante;
+	private InscripcionCertficaciones inscripcionCert;
 	ArrayList<Usuario> listaUsuarios = new ArrayList<>();
 	ArrayList<Curso> listaCursos = new ArrayList<>();
 	ArrayList<Certificaciones> listaCertificaciones = new ArrayList<>();
@@ -19,6 +20,7 @@ public class Controlador implements Isistema{
 		this.gesCertificaciones = new GestionCertificaciones();
 		this.gesEstudiantes = new GestionEstudiantes();
 		this.VPerfilEstudiante = new VisualizacionPerfilEstudiante();
+		this.inscripcionCert = new InscripcionCertficaciones();
 	}
 	
 	public static Controlador getInstance() {
@@ -299,6 +301,36 @@ public class Controlador implements Isistema{
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void mostrarMallaGrafica(Usuario uLogin) {
+		// TODO Auto-generated method stub
+		if(uLogin instanceof Estudiante e) {
+			System.out.println("Abriendo la malla");
+			VentanaMalla v = new VentanaMalla(e, listaCursos);
+			v.setVisible(true);
+		}else {
+			System.out.println("usted no es estudiante");
+		}
+	}
+
+	@Override
+	public void mostrarCertificacionesLindo() {
+		// TODO Auto-generated method stub
+		inscripcionCert.ofertaCertificaciones(listaCertificaciones);
+	}
+
+	@Override
+	public void inscribirAsignaturas(String idCert, String rut) {
+		// TODO Auto-generated method stub
+		Estudiante e = buscarE(rut);
+		if(e!=null) {
+			inscripcionCert.incribirRamo(e, idCert, listaCertificaciones, listaCursos);
+			return;
+		}
+		System.out.println("No existe el estudiante");
+		
 	}
 
 

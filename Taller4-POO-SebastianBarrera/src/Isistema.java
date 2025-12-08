@@ -15,6 +15,7 @@ public interface Isistema {
 	public void cargarNotas(String[] partes);
 	public Usuario buscarUserRut(String rut);
 	public void cargarCertficaciones(String[] partes);
+	// este lo hice solo para ir verificando si me cargaba o no los datos
 	public void mostrarCertficaciones();
 	public void cargarRegistros(String[] partes);
 	public void cargarMateriasCertificaciones(String[] partes);
@@ -33,4 +34,7 @@ public interface Isistema {
 	public void validarAvanceAcademicoMinor(String rut, String idCert);
 	public void verPerfilEstudiante(Usuario uLogin);
 	public Usuario login(String usuario,String password);
+	public void mostrarMallaGrafica(Usuario uLogin);
+	public void mostrarCertificacionesLindo();
+	public void inscribirAsignaturas(String idCert,String rut);
 }
