@@ -36,6 +36,6 @@ public interface Isistema {
 	public Usuario login(String usuario,String password);
 	public void mostrarMallaGrafica(Usuario uLogin);
 	public void mostrarCertificacionesLindo();
-	public void inscribirAsignaturas(String idCert,String rut);
-	public void verDashBoard(String rut);
+	public void inscribirAsignaturas(String idCert,Estudiante e);
+	public void verDashBoard(Estudiante e);
 }

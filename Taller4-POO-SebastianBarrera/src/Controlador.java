@@ -324,9 +324,8 @@ public class Controlador implements Isistema{
 	}
 
 	@Override
-	public void inscribirAsignaturas(String idCert, String rut) {
+	public void inscribirAsignaturas(String idCert, Estudiante e) {
 		// TODO Auto-generated method stub
-		Estudiante e = buscarE(rut);
 		if(e!=null) {
 			inscripcionCert.incribirRamo(e, idCert, listaCertificaciones, listaCursos);
 			return;
@@ -336,8 +335,8 @@ public class Controlador implements Isistema{
 	}
 
 	@Override
-	public void verDashBoard(String rut) {
-		Estudiante e = buscarE(rut);
+	public void verDashBoard(Estudiante e) {
+		
 		if(e==null || e.getListCertificaciones().isEmpty()) {
 			System.out.println("El estudiante no tiene certificaciones o no existe");
 			return;
