@@ -22,7 +22,7 @@ public interface Isistema {
 	public Curso buscarCurso(String codigo);
 	public Certificaciones buscarCertificaciones(String id);
 	public void crearUsuarioManual();
-	public void modificarCuenta(String nombre,int tipo);
+	public void modificarCuenta(String a,int tipoCuent,String b,String c);
 	public void eliminarCuenta(String nombre,int tipo);
 	public void rrestablecerContraseña(String nombre, int tipo,String pass);
 	public Estudiante buscarE(String n);
@@ -33,9 +33,11 @@ public interface Isistema {
 	public void mostrarPerfilesEsMinor(String idCert);
 	public void validarAvanceAcademicoMinor(String rut, String idCert);
 	public void verPerfilEstudiante(Usuario uLogin);
-	public Usuario login(String usuario,String password);
+	public Usuario login(String usuario,String password,int i);
 	public void mostrarMallaGrafica(Usuario uLogin);
 	public void mostrarCertificacionesLindo();
 	public void inscribirAsignaturas(String idCert,Estudiante e);
 	public void verDashBoard(Estudiante e);
+	public void CrearEstudianteManual(String nombre,String rol, String pass, String rut,String carrera,int semestre,String correo);
+	public void CrearCoorManual(String nombre,String rol, String pass, String info);
 }

@@ -176,13 +176,18 @@ public class Controlador implements Isistema{
 	}
 
 	@Override
-	public void modificarCuenta(String nombre, int tipo) {
+	public void modificarCuenta(String a,int tipoCuent,String b,String c) {
 		// TODO Auto-generated method stub
-		if(tipo==1) {
-			Estudiante e = buscarE(nombre);
-			
-		}else if(tipo==2) {
-			Usuario c = buscarUsuarioNombre(nombre);
+		if(tipoCuent==1) {
+			Estudiante e = buscarE(a);
+			e.setRut(a);
+			e.setCorreoE(b);
+			e.setCarrera(c);
+		}else if(tipoCuent==2) {
+			Usuario coor = buscarUsuarioNombre(a);
+			coor.setNombre(a);
+			coor.setPassword(b);
+			coor.setRol(c);
 		}
 	}
 
@@ -296,12 +301,25 @@ public class Controlador implements Isistema{
 	}
 
 	@Override
-	public Usuario login(String usuario, String password) {
-		for (Usuario u : listaUsuarios) {
-			if(u.getNombre().equalsIgnoreCase(usuario)&&u.getPassword().equals(password)) {
-				return u;
+	public Usuario login(String usuario, String password,int i) {
+		if(i==1) {
+			for (Usuario u : listaUsuarios) {
+				if(u.getNombre().equalsIgnoreCase(usuario)&&u.getPassword().equals(password)) {
+					return u;
+				}
+			}
+		}else if(i==2) {
+			for (Usuario u : listaUsuarios) {
+				if(u instanceof Estudiante e) {
+					if(e.getRut().equalsIgnoreCase(usuario)&&e.getPassword().equals(password)) {
+						return e;
+					}
+				}
+				
 			}
 		}
+		
+		
 		return null;
 	}
 
@@ -352,6 +370,21 @@ public class Controlador implements Isistema{
 			}
 		}
 		
+	}
+
+	@Override
+	public void CrearEstudianteManual(String nombre, String rol, String pass, String rut, String carrera, int semestre,
+			String correo) {
+		// TODO Auto-generated method stub
+		Estudiante e = new Estudiante(nombre, pass, rol, rut, carrera, semestre, correo);
+		listaUsuarios.add(e);
+	}
+
+	@Override
+	public void CrearCoorManual(String nombre, String rol, String pass, String info) {
+		// TODO Auto-generated method stub
+		Cordinador c = new Cordinador(nombre, pass, rol, info);
+		listaUsuarios.add(c);
 	}
 
 

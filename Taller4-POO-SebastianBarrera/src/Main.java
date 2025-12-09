@@ -20,14 +20,17 @@ public class Main {
 		//c.mostrarCertficaciones();
 		while(usuarioLogueado == null) {
 			System.out.println("Bienvenido");
-            
+            System.out.println("1)si es usuario");
+            System.out.println("2)si es estudiante");
+            int tipoU = sc.nextInt();
+            sc.nextLine();
             System.out.print(" Usuario/RUT: ");
             String user = sc.next();
             
             System.out.print(" Contraseña:  ");
             String pass = sc.next();
             System.out.println("Cargando");
-            usuarioLogueado = c.login(user, pass);
+            usuarioLogueado = c.login(user, pass,tipoU);
             
             if (usuarioLogueado == null) {
                 System.out.println("\n ERROR: Credenciales incorrectas. \nIntente nuevamente.");
@@ -42,7 +45,7 @@ public class Main {
             menuCoordinador(c, (Cordinador) usuarioLogueado);
             
         } else if (usuarioLogueado instanceof Usuario) {
-            System.out.println("Menú de Administrador no implementado.");
+            menuAdministrador(c, usuarioLogueado);
         }
  
 	}
@@ -144,6 +147,112 @@ public class Main {
                         String idVal = sc.nextLine();
                         sistema.validarAvanceAcademicoMinor(rut, idVal);
                         
+                        break;
+                    case 0:
+                        System.out.println("Saliendo...");
+                        break;
+                    default:
+                        System.out.println("Opción no válida.");
+                }
+            } catch (Exception e) {
+                System.out.println("Error: Debe ingresar un numero.");
+                sc.nextLine();
+            }
+        }
+    }
+	
+	public static void menuAdministrador(Controlador sistema, Usuario u) {
+        int opcion = -1;
+        while (opcion != 0) {
+            System.out.println("\n--- MENU ADMINISTRADOR (" + u.getNombre() + ") ---");
+            System.out.println("1. Crear Cuentas de estudiante o coordinador");
+            System.out.println("2. Modificar cuentas (estudiante/coordinador)");
+            System.out.println("3. Eliminar cuentas");
+            System.out.println("4. Restablecer contraseñas");
+            System.out.println("0. Salir");
+            System.out.print("Opción: ");
+
+            try {
+                opcion = sc.nextInt();
+                sc.nextLine(); 
+
+                switch (opcion) {
+                    case 1:
+                    	System.out.print("Tipo de cuenta: ");
+                        System.out.println("1)Estudiante");
+                        System.out.println("2)Coordinador");
+                        int tipoC = sc.nextInt();
+                        sc.nextLine();
+                        if(tipoC==1) {
+                        	System.out.println("ingrese nombre");
+                            String nombre = sc.nextLine();
+                        	System.out.println("ingrese rut");
+                            String rut = sc.nextLine();
+                            System.out.println("Ingrese el  correo");
+                            String correo = sc.nextLine();
+                            System.out.println("Ingrese la  carrera");
+                            String carrera = sc.nextLine();
+                            System.out.println("Ingrese una contraseña");
+                            String contraseña = sc.nextLine();
+                            sistema.CrearEstudianteManual(nombre, "Estudiante", contraseña, rut, carrera, tipoC, correo);
+                  
+                        }else if(tipoC==2) {
+                        	System.out.println("ingrese nombre");
+                            String nombre = sc.nextLine();
+                            System.out.println("Ingrese contraseña");
+                            String contraseña = sc.nextLine();
+                            System.out.println("Info adicional ej; Desarrollo de software");
+                            String info = sc.nextLine();
+                            sistema.CrearCoorManual(nombre, "Coordinador", contraseña, info);
+                        }
+                        break;
+                    case 2:
+                    	System.out.print("Tipo de cuenta: ");
+                        System.out.println("1)Estudiante");
+                        System.out.println("2)Coordinador");
+                        int tipoCuent = sc.nextInt();
+                        sc.nextLine();
+                        if(tipoCuent==1) {
+                        	System.out.println("ingrese rut");
+                            String rut = sc.nextLine();
+                            System.out.println("Ingrese el nuevo correo");
+                            String correo = sc.nextLine();
+                            System.out.println("Ingrese la nueva carrera");
+                            String carrera = sc.nextLine();
+                            sistema.modificarCuenta(rut, tipoCuent, correo, carrera);
+                        }else if(tipoCuent==2) {
+                        	System.out.println("ingrese nombre");
+                            String nombre = sc.nextLine();
+                            System.out.println("Ingrese nueva contraseña");
+                            String contraseña = sc.nextLine();
+                            System.out.println("Ingrese rol");
+                            String area = sc.nextLine();
+                            sistema.modificarCuenta(nombre, tipoCuent,contraseña,area);
+                        }
+                        
+                        
+                        break;
+                    case 3:
+                        System.out.print("Tipo de cuenta: ");
+                        System.out.println("1)Estudiante");
+                        System.out.println("2)Coordinador");
+                        int tipoCuenta = sc.nextInt();
+                        sc.nextLine();
+                        System.out.println("ingrese user/rut");
+                        String id = sc.nextLine();
+                        sistema.eliminarCuenta(id, tipoCuenta);   
+                        break;
+                    case 4:
+                    	System.out.print("Tipo de cuenta: ");
+                        System.out.println("1)Estudiante");
+                        System.out.println("2)Coordinador");
+                        int tipoCuente = sc.nextInt();
+                        sc.nextLine();
+                        System.out.println("ingrese user/rut");
+                        String id1 = sc.nextLine();
+                        System.out.println("Ingrese la nueva contraseña");
+                        String password = sc.nextLine();
+                        sistema.rrestablecerContraseña(id1, tipoCuente, password);
                         break;
                     case 0:
                         System.out.println("Saliendo...");
