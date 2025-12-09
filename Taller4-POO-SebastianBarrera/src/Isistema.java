@@ -27,17 +27,17 @@ public interface Isistema {
 	public void rrestablecerContraseña(String nombre, int tipo,String pass);
 	public Estudiante buscarE(String n);
 	public Cordinador buscarC(String n);
-	public void aplicarEstrategia(int i);
+	public String aplicarEstrategia(int i);
 	public void modificarCertficacion(String id, String desc, int cred, int year);
-	public void emisionDiplomaCertficacion(String idCert);
-	public void mostrarPerfilesEsMinor(String idCert);
-	public void validarAvanceAcademicoMinor(String rut, String idCert);
-	public void verPerfilEstudiante(Usuario uLogin);
+	public String emisionDiplomaCertficacion(String idCert);
+	public String mostrarPerfilesEsMinor(String idCert);
+	public String validarAvanceAcademicoMinor(String rut, String idCert);
+	public String verPerfilEstudiante(Usuario uLogin);
 	public Usuario login(String usuario,String password,int i);
 	public void mostrarMallaGrafica(Usuario uLogin);
-	public void mostrarCertificacionesLindo();
-	public void inscribirAsignaturas(String idCert,Estudiante e);
-	public void verDashBoard(Estudiante e);
+	public String mostrarCertificacionesLindo();
+	public String inscribirAsignaturas(String idCert,Estudiante e);
+	public String verDashBoard(Estudiante e);
 	public void CrearEstudianteManual(String nombre,String rol, String pass, String rut,String carrera,int semestre,String correo);
 	public void CrearCoorManual(String nombre,String rol, String pass, String info);
 }

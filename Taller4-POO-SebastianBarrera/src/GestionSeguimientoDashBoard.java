@@ -8,54 +8,65 @@ public class GestionSeguimientoDashBoard {
     }
 
     // hago el metodo aparte para el titulo porque o sino se me mostraba cada vez que iteraba el for en el sistema
-    public void mostrarTitlo(Estudiante alumno) {
-    	System.out.println("\n-----------------------------------------------------------");
-        System.out.println("       DASHBOARD DE PROGRESO: " + alumno.getNombre().toUpperCase());
-        System.out.println();
+    public String mostrarTitlo(Estudiante alumno) {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("\n-----------------------------------------------------------\n");
+        sb.append("       DASHBOARD DE PROGRESO: " + alumno.getNombre().toUpperCase() + "\n");
+        sb.append("\n");
+        return sb.toString();
     }
-    public void mostrarProgresoUnitario(Estudiante alumno, Registros registro, Certificaciones cert) {
-    	
-        System.out.println("\n------------------------------------------------------------");
-        System.out.println("Minor: " + cert.getNombre().toUpperCase());
-        System.out.println("ID:            " + cert.getId());
-        System.out.println("Estado Actual: " + registro.getEstado());
+    public String mostrarProgresoUnitario(Estudiante alumno, Registros registro, Certificaciones cert) {
+    	StringBuilder sb = new StringBuilder();
+        sb.append("\n------------------------------------------------------------\n");
+        sb.append("Minor: " + cert.getNombre().toUpperCase() + "\n");
+        sb.append("ID:            " + cert.getId() + "\n");
+        sb.append("Estado Actual: " + registro.getEstado() + "\n");
         
-        imprimirBarraProgreso(registro.getProgreso());
+        sb.append(imprimirBarraProgreso(registro.getProgreso()));
 
         
-        System.out.println("Mensaje del Mentor Virtual:");
-        cert.aceptar(visitor);
-        mostrarPendientes(alumno, cert);
+        sb.append("Mensaje del Mentor Virtual:\n");
+        // Nota: Como el visitor imprime en consola, aqui podriamos adaptarlo
+        // pero por simplicidad dejaremos que imprima o lo ideal seria que el visitor tambien retorne String.
+        // Asumiendo que visitor imprime, se vera en consola, pero el resto se vera en GUI.
+        cert.aceptar(visitor); 
         
-        System.out.println("------------------------------------------------------------");
+        sb.append(mostrarPendientes(alumno, cert));
+        
+        sb.append("------------------------------------------------------------\n");
+        return sb.toString();
     }
     
-    private void mostrarPendientes(Estudiante alumno, Certificaciones cert) {
-        System.out.println("\n| ASIGNATURAS PENDIENTES:");
+    private String mostrarPendientes(Estudiante alumno, Certificaciones cert) {
+    	StringBuilder sb = new StringBuilder();
+        sb.append("\n| ASIGNATURAS PENDIENTES:\n");
         
         ArrayList<Curso> requeridos = cert.getListaAsignaturasCertificacion();
         boolean bandera = true;
 
         for (Curso req : requeridos) {
             if (!tieneCursoAprobado(alumno, req.getCodigo())) {
-                System.out.println("   [ ] " + req.getCodigo() + " - " + req.getNomnbre());
+                sb.append("   [ ] " + req.getCodigo() + " - " + req.getNomnbre() + "\n");
                 bandera = false;
             }
         }
 
         if (bandera) {
-            System.out.println("Ninguna! Has completado todos los requisitos académicos.");
+            sb.append("Ninguna! Has completado todos los requisitos académicos.\n");
         }
+        return sb.toString();
     }
 // esta parte me costo mas y fue una de las pocas partes que tuve que buscar en google, youtube y pregunte hasta en un foro, dejare todo en el readme
-    private void imprimirBarraProgreso(int porcentaje) {
-        System.out.print("Progreso:---|");
+    private String imprimirBarraProgreso(int porcentaje) {
+    	StringBuilder sb = new StringBuilder();
+        sb.append("Progreso:---|");
         int barras = porcentaje / 10; // Cada 10 porciento es un bloque |-| que es como si fuese una carga o algo asi, no se me ocurrio como representar la carga mas que eso |-|
         for (int i = 0; i < 10; i++) {
-            if (i < barras) System.out.print("|-|");
-            else System.out.print("-");
+            if (i < barras) sb.append("|-|");
+            else sb.append("-");
         }
-        System.out.println("|---" + porcentaje + "%");
+        sb.append("|---" + porcentaje + "%\n");
+        return sb.toString();
     }
 // funcion que nos dice si hay una materia aprobada o no devolviendo un bolenao
     private boolean tieneCursoAprobado(Estudiante e, String nrc) {

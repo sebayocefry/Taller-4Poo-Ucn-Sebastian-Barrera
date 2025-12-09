@@ -18,6 +18,7 @@ public class Main {
 		//c.mostrarUsuarios();
 		//c.mostrarCursos();
 		//c.mostrarCertficaciones();
+		new LoginFrame(c).setVisible(true);
 		while(usuarioLogueado == null) {
 			System.out.println("Bienvenido");
             System.out.println("1)si es usuario");

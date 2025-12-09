@@ -2,22 +2,23 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class InscripcionCertficaciones {
-	public void ofertaCertificaciones(ArrayList<Certificaciones> lista) {
-		System.out.println("---CERTIFICACIONES---");
+	public String ofertaCertificaciones(ArrayList<Certificaciones> lista) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("---CERTIFICACIONES---\n");
 		for (Certificaciones c : lista) {
-			System.out.println();
-			System.out.println("ID:           " + c.getId());
-            System.out.println("Nombre:       " + c.getNombre());
-            System.out.println("Descripcion:  " + c.getDescripcion());
-            System.out.println("----REQUISITOS:----");
-            System.out.println("Creditos Requeridos: " + c.getMinCreditos()); 
-            System.out.println("Validez del minor:      " + c.getYearsValides() + " años");
-            System.out.println();
+			sb.append("\n");
+			sb.append("ID:             " + c.getId() + "\n");
+            sb.append("Nombre:        " + c.getNombre() + "\n");
+            sb.append("Descripcion:   " + c.getDescripcion() + "\n");
+            sb.append("----REQUISITOS:----\n");
+            sb.append("Creditos Requeridos: " + c.getMinCreditos() + "\n"); 
+            sb.append("Validez del minor:        " + c.getYearsValides() + " años\n");
+            sb.append("\n");
 		}
-		
+		return sb.toString();
 	}
 	
-	public void incribirRamo(Estudiante e, String idCert,ArrayList<Certificaciones> listacert,ArrayList<Curso> listaCurso) {
+	public String incribirRamo(Estudiante e, String idCert,ArrayList<Certificaciones> listacert,ArrayList<Curso> listaCurso) {
 		Certificaciones certificacionesSeleccionada = null;
 		for (Certificaciones c :listacert) {
 			if(c.getId().equalsIgnoreCase(idCert)) {
@@ -27,15 +28,13 @@ public class InscripcionCertficaciones {
 		}
 		
 		if(certificacionesSeleccionada==null) {
-			System.out.println("Certificacion no existente");
-			return;
+			return "Error: Certificacion no existente";
 		}
 		
 		//validamos que no este inscrito 
 		for (Registros curso : e.getListCertificaciones()) {
 			if(curso.getIdCerftificacion().equalsIgnoreCase(idCert)) {
-				System.out.println("La certificacion ya esta inscrita en la linea del estudiante");
-				return;
+				return "Error: La certificacion ya esta inscrita en la linea del estudiante";
 			}
 		}
 		
@@ -43,20 +42,18 @@ public class InscripcionCertficaciones {
 		int creditosNecesarios = certificacionesSeleccionada.getMinCreditos();
 		//sino nos alcanzan los creditos
 		if(creditosAlumno< creditosNecesarios) {
-			System.out.println("----RECHAZADO:---\nNo cumples con los requisitos academicos.");
-            System.out.println("   Tus Creditos: " + creditosAlumno);
-            System.out.println("   Requeridos:   " + creditosNecesarios);
-            return;
+			return "----RECHAZADO:---\nNo cumples con los requisitos academicos.\n" +
+                   "   Tus Creditos: " + creditosAlumno + "\n" +
+                   "   Requeridos:   " + creditosNecesarios;
 		}
 		// localDate.now para que se ponga la fecha del pc 
 		Registros nR = new Registros(e.getRut(), certificacionesSeleccionada.getId(), LocalDate.now(), "Activa", 0);
 		e.agregarCertificacion(nR);
-		System.out.println("-----------------------------");
-		System.out.println("INSCRIPCION EXITOSA!");
-        System.out.println("Has sido matriculado en: " + certificacionesSeleccionada.getNombre());
-        System.out.println("Fecha: " + LocalDate.now());
-        System.out.println();
 		
+		return "-----------------------------\n" +
+               "INSCRIPCION EXITOSA!\n" +
+               "Has sido matriculado en: " + certificacionesSeleccionada.getNombre() + "\n" +
+               "Fecha: " + LocalDate.now() + "\n";
 	}
 	/**
 	 * como nos dice que el alumno necesita tener una cantidad x de creditos aporbados en el total 

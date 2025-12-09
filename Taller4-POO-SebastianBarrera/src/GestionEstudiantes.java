@@ -2,8 +2,9 @@ import java.util.ArrayList;
 
 public class GestionEstudiantes {
 
-    public void listarEstudiantesPorCertificacion(ArrayList<Usuario> listaUsuarios, String idCertificacion) {
-        System.out.println("--- LISTA  DE ESTUDIANTES EN " + idCertificacion.toUpperCase() + " ----");
+    public String listarEstudiantesPorCertificacion(ArrayList<Usuario> listaUsuarios, String idCertificacion) {
+    	StringBuilder sb = new StringBuilder();
+        sb.append("--- LISTA  DE ESTUDIANTES EN " + idCertificacion.toUpperCase() + " ----\n");
         boolean bandera = false;
 
         for (Usuario u : listaUsuarios) {
@@ -11,7 +12,7 @@ public class GestionEstudiantes {
                 // buscamos si tiene la certificacion inscrita
                 for (Registros r : e.getListCertificaciones()) {
                     if (r.getIdCerftificacion().equalsIgnoreCase(idCertificacion)) {
-                        imprimirPerfil(e, r);
+                        sb.append(imprimirPerfil(e, r));
                         bandera = true;
                     }
                 }
@@ -19,15 +20,16 @@ public class GestionEstudiantes {
         }
 
         if (!bandera) {
-            System.out.println(" No se encontraron estudiantes inscritos en esta linea de minor");
+            sb.append(" No se encontraron estudiantes inscritos en esta linea de minor\n");
         }
+        return sb.toString();
     }
 
-    public void validarAvance(Estudiante alumno, Certificaciones certificacion) {
+    public String validarAvance(Estudiante alumno, Certificaciones certificacion) {
+        StringBuilder sb = new StringBuilder();
         
         if (alumno == null || certificacion == null) {
-            System.out.println("Error: Datos de estudiante o certificación invalidos.");
-            return;
+            return "Error: Datos de estudiante o certificación invalidos.";
         }
 
 
@@ -40,17 +42,15 @@ public class GestionEstudiantes {
         }
 
         if (registroAlumno == null) {
-            System.out.println("--El estudiante " + alumno.getNombre() + " NO tiene inscrito el minor " + certificacion.getId());
-            return;
+            return "--El estudiante " + alumno.getNombre() + " NO tiene inscrito el minor " + certificacion.getId();
         }
-        System.out.println("Analizando historial del alumno " + alumno.getNombre() + "...");
+        sb.append("Analizando historial del alumno " + alumno.getNombre() + "...\n");
         
        // punto de error debugg(borrar)
         ArrayList<Curso> cursosRequeridos = certificacion.getListaAsignaturasCertificacion(); 
         
         if (cursosRequeridos.isEmpty()) {
-            System.out.println(">> Error: La certificación no tiene cursos existentes");
-            return;
+            return ">> Error: La certificación no tiene cursos existentes";
         }
 
         int totalMateria = cursosRequeridos.size();
@@ -67,11 +67,12 @@ public class GestionEstudiantes {
         
         if (porcentajeReal >= 100) {
             registroAlumno.setEstado("Completada");
-            System.out.println("|-- FELICIDADES!!! Certificacion MINOR completada al 100%");
+            sb.append("|-- FELICIDADES!!! Certificacion MINOR completada al 100%\n");
         } else {
             registroAlumno.setEstado("Activa");
-            System.out.println("!-- Progreso actualizado: " + porcentajeReal + "% (" + materiasAprobadas + "/" + totalMateria + " cursos).");
+            sb.append("!-- Progreso actualizado: " + porcentajeReal + "% (" + materiasAprobadas + "/" + totalMateria + " cursos).\n");
         }
+        return sb.toString();
     }
 
     private boolean tieneCursoAprobado(Estudiante e, String nrc) {
@@ -84,14 +85,16 @@ public class GestionEstudiantes {
     }
 
    
-    private void imprimirPerfil(Estudiante e, Registros r) {
-        System.out.println("------------------------------------------------");     
-        System.out.println("Alumno:   " + e.getNombre()); 
-        System.out.println("Correo:   " + e.getCorreoE());
-        System.out.println("Carrera:  " + e.getCarrera());
-        System.out.println("Situacion MINOR:");
-        System.out.println("   - Estado:   " + r.getEstado());
-        System.out.println("   - Progreso: " + r.getProgreso() + "%");
-        System.out.println("------------------------------------------------");
+    private String imprimirPerfil(Estudiante e, Registros r) {
+    	StringBuilder sb = new StringBuilder();
+        sb.append("------------------------------------------------\n");     
+        sb.append("Alumno:   " + e.getNombre() + "\n"); 
+        sb.append("Correo:   " + e.getCorreoE() + "\n");
+        sb.append("Carrera:  " + e.getCarrera() + "\n");
+        sb.append("Situacion MINOR:\n");
+        sb.append("   - Estado:   " + r.getEstado() + "\n");
+        sb.append("   - Progreso: " + r.getProgreso() + "%\n");
+        sb.append("------------------------------------------------\n");
+        return sb.toString();
     }
 }

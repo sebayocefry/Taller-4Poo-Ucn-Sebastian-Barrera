@@ -17,14 +17,15 @@ public class GestionCertificaciones {
 	
 	// reporte certificado 
 	
-	public void generar(ArrayList<Usuario> listaUsuarios, String idCertificacion) {
+	public String generar(ArrayList<Usuario> listaUsuarios, String idCertificacion) {
+		StringBuilder sb = new StringBuilder();
 		boolean bandera = false;
-		System.out.println("--- Procesando titulo para certificacion " + idCertificacion + " ---");
+		sb.append("--- Procesando titulo para certificacion " + idCertificacion + " ---\n");
 		for (Usuario usuario : listaUsuarios) {
 			if(usuario instanceof Estudiante e) {
 				for (Registros r : e.getListCertificaciones()) {
 					if(r.getIdCerftificacion().equalsIgnoreCase(idCertificacion)&&r.getEstado().equalsIgnoreCase("completada")) {
-						imprimirTitulo(e,r);
+						sb.append(imprimirTitulo(e,r));
 						bandera = true;
 					}
 					
@@ -32,24 +33,27 @@ public class GestionCertificaciones {
 			}
 		}
 		if(!bandera) {
-			System.out.println("UPS, LO LAMENTAMOS NO HAY ESTUDIANTES QUE CUMPLAN EL PERFIL");
+			sb.append("UPS, LO LAMENTAMOS NO HAY ESTUDIANTES QUE CUMPLAN EL PERFIL\n");
 		}
+		return sb.toString();
 	}
 	
-	private void imprimirTitulo(Estudiante e, Registros r) {
-		System.out.println("\n========================================================");
-	    System.out.println("               UNIVERSIDAD CATOLICA DE MISH            ");
-	    System.out.println("                 CERTIFICACION OFICIAL                    ");
-	    System.out.println("========================================================");
-	    System.out.println("Se otorga el presente certificado a:");
-	    System.out.println("   " + e.getNombre().toUpperCase() + " (RUT: " + e.getRut() + ")");
-	    System.out.println("");
-	    System.out.println("Por haber completado satisfactoriamente el minor de:");
-	    System.out.println("   MINOR ID: " + r.getIdCerftificacion());
-	    System.out.println("");
-	    System.out.println("Fecha de completitud: " + java.time.LocalDate.now()); // libreria para que siempre tome la fecha del pc
-	    System.out.println("Estado Final: " + r.getEstado() + " (" + r.getProgreso() + "%)");
-	    System.out.println("========================================================\n");
+	private String imprimirTitulo(Estudiante e, Registros r) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("\n========================================================\n");
+	    sb.append("               UNIVERSIDAD CATOLICA DE MISH            \n");
+	    sb.append("                 CERTIFICACION OFICIAL                    \n");
+	    sb.append("========================================================\n");
+	    sb.append("Se otorga el presente certificado a:\n");
+	    sb.append("   " + e.getNombre().toUpperCase() + " (RUT: " + e.getRut() + ")\n");
+	    sb.append("\n");
+	    sb.append("Por haber completado satisfactoriamente el minor de:\n");
+	    sb.append("   MINOR ID: " + r.getIdCerftificacion() + "\n");
+	    sb.append("\n");
+	    sb.append("Fecha de completitud: " + java.time.LocalDate.now() + "\n"); // libreria para que siempre tome la fecha del pc
+	    sb.append("Estado Final: " + r.getEstado() + " (" + r.getProgreso() + "%)\n");
+	    sb.append("========================================================\n");
+	    return sb.toString();
 	}
 	
 }

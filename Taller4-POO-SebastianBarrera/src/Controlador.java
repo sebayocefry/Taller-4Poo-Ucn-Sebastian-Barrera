@@ -2,6 +2,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.io.*;
+
 public class Controlador implements Isistema{
 	private static Controlador miInstancia;
 	// para poder llamar la estaregia que completa el punto 2 del menu coor
@@ -240,16 +241,14 @@ public class Controlador implements Isistema{
 	}
 
 	@Override
-	public void aplicarEstrategia(int i) {
+	public String aplicarEstrategia(int i) {
 		if(i==1) {
 			misReportes.setMiEstrategia(new AnalisiInscripcion());
 		}else if(i==2) {
 			misReportes.setMiEstrategia(new AnalisisAsignaturas());
 		}
 		
-		String reporte = misReportes.ejecutarReporte(listaUsuarios);
-		
-		System.out.println(reporte);
+		return misReportes.ejecutarReporte(listaUsuarios);
 	}
 
 	@Override
@@ -263,40 +262,44 @@ public class Controlador implements Isistema{
 	}
 
 	@Override
-	public void emisionDiplomaCertficacion(String idCert) {gesCertificaciones.generar(listaUsuarios, idCert);}
+	public String emisionDiplomaCertficacion(String idCert) {
+        return gesCertificaciones.generar(listaUsuarios, idCert);
+    }
 
 	@Override
-	public void mostrarPerfilesEsMinor(String idCert) {
+	public String mostrarPerfilesEsMinor(String idCert) {
 		// TODO Auto-generated method stub
 		//aqui me ajile y debi hacer una extraccion del obejto antes para ahorrar code en la otra clase
-		gesEstudiantes.listarEstudiantesPorCertificacion(listaUsuarios, idCert);
+		return gesEstudiantes.listarEstudiantesPorCertificacion(listaUsuarios, idCert);
 	}
 
 	@Override
-	public void validarAvanceAcademicoMinor(String rut, String idCert) {
+	public String validarAvanceAcademicoMinor(String rut, String idCert) {
 		// aqui ya no me paso, aqui anduve mas despierto y extrai el objeto antes
 		Usuario u = buscarUserRut(rut);
 		Certificaciones c = buscarCertificaciones(idCert);
 		if(u!=null&&c!=null) {
 			Estudiante e = (Estudiante)u;
-			gesEstudiantes.validarAvance(e, c);
+			return gesEstudiantes.validarAvance(e, c);
 		}else {
-			System.out.println("ERROR: No se pudo realizar la validacion.");
-            System.out.println("- Verifique que el RUT pertenezca a un Estudiante.");
-            System.out.println("- Verifique que el ID de certificacion exista.");
+			return "ERROR: No se pudo realizar la validacion.\n" +
+                   "- Verifique que el RUT pertenezca a un Estudiante.\n" +
+                   "- Verifique que el ID de certificacion exista.";
 		}
 	}
 
 	@Override
-	public void verPerfilEstudiante(Usuario uLogin) {
+	public String verPerfilEstudiante(Usuario uLogin) {
 		// TODO Auto-generated method stub
 		if(uLogin instanceof Estudiante) {
 			Estudiante e = (Estudiante)uLogin;
-			VPerfilEstudiante.mostrarDatosPersonales(e);
-			VPerfilEstudiante.mostrarMalla(e, listaCursos);
-			VPerfilEstudiante.mostrarPromedios(e);
+            StringBuilder sb = new StringBuilder();
+            sb.append(VPerfilEstudiante.mostrarDatosPersonales(e)).append("\n");
+            sb.append(VPerfilEstudiante.mostrarMalla(e, listaCursos)).append("\n");
+            sb.append(VPerfilEstudiante.mostrarPromedios(e));
+            return sb.toString();
 		}else {
-			System.out.println("ERROR: USTED NO ES ESTUDIANTE");
+			return "ERROR: USTED NO ES ESTUDIANTE";
 		}
 	}
 
@@ -336,39 +339,39 @@ public class Controlador implements Isistema{
 	}
 
 	@Override
-	public void mostrarCertificacionesLindo() {
+	public String mostrarCertificacionesLindo() {
 		// TODO Auto-generated method stub
-		inscripcionCert.ofertaCertificaciones(listaCertificaciones);
+		return inscripcionCert.ofertaCertificaciones(listaCertificaciones);
 	}
 
 	@Override
-	public void inscribirAsignaturas(String idCert, Estudiante e) {
+	public String inscribirAsignaturas(String idCert, Estudiante e) {
 		// TODO Auto-generated method stub
 		if(e!=null) {
-			inscripcionCert.incribirRamo(e, idCert, listaCertificaciones, listaCursos);
-			return;
+			return inscripcionCert.incribirRamo(e, idCert, listaCertificaciones, listaCursos);
 		}
-		System.out.println("No existe el estudiante");
+		return "No existe el estudiante";
 		
 	}
 
 	@Override
-	public void verDashBoard(Estudiante e) {
+	public String verDashBoard(Estudiante e) {
 		
 		if(e==null || e.getListCertificaciones().isEmpty()) {
-			System.out.println("El estudiante no tiene certificaciones o no existe");
-			return;
+			return "El estudiante no tiene certificaciones o no existe";
 		}
-		dashBoar.mostrarTitlo(e);
+        StringBuilder sb = new StringBuilder();
+		sb.append(dashBoar.mostrarTitlo(e));
 		// dentro de la clase que llamaremos aplicaremos el visitor
 		for (Registros r : e.getListCertificaciones()) {
 			Certificaciones c = buscarCertificaciones(r.getIdCerftificacion());
 			if(c != null) {
-				dashBoar.mostrarProgresoUnitario(e, r, c);
+				sb.append(dashBoar.mostrarProgresoUnitario(e, r, c));
 			}else {
-				System.out.println("no se encontro la certificacion");
+				sb.append("no se encontro la certificacion\n");
 			}
 		}
+        return sb.toString();
 		
 	}
 
@@ -386,7 +389,5 @@ public class Controlador implements Isistema{
 		Cordinador c = new Cordinador(nombre, pass, rol, info);
 		listaUsuarios.add(c);
 	}
-
-
 
 }

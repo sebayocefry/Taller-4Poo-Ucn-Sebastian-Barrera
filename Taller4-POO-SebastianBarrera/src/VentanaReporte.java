@@ -1,0 +1,17 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class VentanaReporte extends JFrame {
+    public VentanaReporte(String titulo, String contenido) {
+        setTitle(titulo);
+        setSize(500, 400);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+        
+        JTextArea area = new JTextArea(contenido);
+        area.setEditable(false); 
+        area.setMargin(new Insets(10,10,10,10));
+        area.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
+        add(new JScrollPane(area)); 
+    }
+}

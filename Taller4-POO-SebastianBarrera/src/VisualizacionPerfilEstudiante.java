@@ -1,22 +1,25 @@
 import java.util.ArrayList;
 
 public class VisualizacionPerfilEstudiante {
-	public void mostrarDatosPersonales(Estudiante e) {
-        System.out.println("-----PERFIL DEL ESTUDIANTE------");
-        System.out.println();
-        System.out.println("Nombre:   " + e.getNombre());
-        System.out.println("RUT:      " + e.getRut()); 
-        System.out.println("Correo electronico:   " + e.getCorreoE());
-        System.out.println("Carrera:  " + e.getCarrera());
-        System.out.println("Semestre: " + e.getSemestre());
-        System.out.println("------------------------------------\n");
+	public String mostrarDatosPersonales(Estudiante e) {
+		StringBuilder sb = new StringBuilder();
+        sb.append("-----PERFIL DEL ESTUDIANTE------\n");
+        sb.append("\n");
+        sb.append("Nombre:   ").append(e.getNombre()).append("\n");
+        sb.append("RUT:      ").append(e.getRut()).append("\n"); 
+        sb.append("Correo electronico:   ").append(e.getCorreoE()).append("\n");
+        sb.append("Carrera:  ").append(e.getCarrera()).append("\n");
+        sb.append("Semestre: ").append(e.getSemestre()).append("\n");
+        sb.append("------------------------------------\n");
+        return sb.toString();
     }
 	
-	public void mostrarMalla(Estudiante e, ArrayList<Curso> catalogoCursos) {
-        System.out.println("--- MALLA CURRICULAR ---");
+	public String mostrarMalla(Estudiante e, ArrayList<Curso> catalogoCursos) {
+		StringBuilder sb = new StringBuilder();
+        sb.append("--- MALLA CURRICULAR ---\n");
         //hago reserva de espacios para que todo se ordene con el mismo espacio como un jtable o una excel
-        System.out.printf("%-10s %-30s %-15s %-5s\n", "CODIGO", "ASIGNATURA", "ESTADO", "NOTA");
-        System.out.println("----------------------------------------------------------------");
+        sb.append(String.format("%-10s %-30s %-15s %-5s\n", "CODIGO", "ASIGNATURA", "ESTADO", "NOTA"));
+        sb.append("----------------------------------------------------------------\n");
         for (Curso curso : catalogoCursos) {
             Notas notaRegistrada = buscarNota(e, curso.getCodigo());
             String estado = "PENDIENTE";
@@ -29,15 +32,17 @@ public class VisualizacionPerfilEstudiante {
             if (nombreMostrar.length() > 28) {
                 nombreMostrar = nombreMostrar.substring(0, 28) + "..";
             }
-            System.out.printf("%-10s %-30s %-15s %-5s\n", curso.getCodigo(),nombreMostrar,estado,notaStr);
+            sb.append(String.format("%-10s %-30s %-15s %-5s\n", curso.getCodigo(),nombreMostrar,estado,notaStr));
         }
-        System.out.println("----------------------------------------------------------------\n");
+        sb.append("----------------------------------------------------------------\n");
+        return sb.toString();
     }
-	public void mostrarPromedios(Estudiante e) {
+	public String mostrarPromedios(Estudiante e) {
+		StringBuilder sb = new StringBuilder();
         ArrayList<Notas> historia = e.getListaNotasMaterias();
         
-        if (historia.isEmpty()) {System.out.println("No hay notas para calcular promedios.");return;}
-        System.out.println("--- Informe de notas ---");
+        if (historia.isEmpty()) {return "No hay notas para calcular promedios.";}
+        sb.append("--- Informe de notas ---\n");
         double sumaTotal = 0;
         int countTotal = 0;
         for (Notas n : historia) {
@@ -45,8 +50,8 @@ public class VisualizacionPerfilEstudiante {
             countTotal++;
         }
         double promedioGeneral = (countTotal > 0) ? sumaTotal / countTotal : 0.0;
-        System.out.printf("Promedio General: %.2f\n\n", promedioGeneral);
-        System.out.println("Promedios por Semestre:");
+        sb.append(String.format("Promedio General: %.2f\n\n", promedioGeneral));
+        sb.append("Promedios por Semestre:\n");
         ArrayList<String> semestresCalculados = new ArrayList<>();
 
         for (Notas n : historia) {
@@ -54,11 +59,12 @@ public class VisualizacionPerfilEstudiante {
             
             if (!semestresCalculados.contains(sem)) {
                 double promSem = calcularPromedioDeUnSemestre(historia, sem);
-                System.out.printf("   - Semestre %s: %.2f\n", sem, promSem);
+                sb.append(String.format("   - Semestre %s: %.2f\n", sem, promSem));
                 semestresCalculados.add(sem);
             }
         }
-        System.out.println("");
+        sb.append("\n");
+        return sb.toString();
     }
 	
 	private double calcularPromedioDeUnSemestre(ArrayList<Notas> notas, String semestre) {
