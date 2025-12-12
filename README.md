@@ -73,3 +73,51 @@ Estrucutura
     ├── cursos.txt
     ├── notas.txt
     └── ... (resto de archivos .txt)
+
+
+
+
+¡Entendido! Aquí tienes el flujo de uso del programa, presentado solo como texto descriptivo, sin tablas ni casillas.
+
+Instrucciones de Uso del Programa
+Una vez que ejecutes la aplicación (vista/Main.java), la interfaz gráfica te guiará a través de las funciones principales.
+
+1. Inicio de Sesión (Login)
+Al iniciar, se abrirá la ventana de Login. Debes seleccionar el Tipo de Cuenta correcto para el usuario que vas a ingresar:
+
+Si seleccionas Estudiante, el campo de credencial debe ser el RUT.
+
+Si seleccionas Usuario / Coordinador, el campo de credencial debe ser el Nombre de usuario.
+
+El sistema validará las credenciales y te dirigirá al menú correspondiente a tu rol.
+
+2. Menú Estudiante (Funciones principales)
+Como estudiante, accedes a la información y herramientas de seguimiento:
+
+Ver Perfil: Muestra toda la información académica del alumno: datos personales, la malla curricular completa con estado de asignaturas, y el cálculo de promedios generales y por semestre. Esta información se abre en una Ventana de Reporte dedicada.
+
+Malla Interactiva: Abre la vista gráfica de la malla curricular. Los cursos aparecen como bloques de color que indican su estado (Aprobado, Reprobado, Pendiente, Cursando).
+
+Dashboard Progreso: Genera el reporte visual del progreso de tus certificaciones (Minors). Muestra la barra de progreso de cada minor inscrito y mensajes de apoyo del "Mentor Virtual" (patrón Visitor). El reporte se abre en una Ventana de Reporte.
+
+Inscribir Minor: Muestra primero la lista de certificaciones disponibles y sus requisitos. Luego, te pide ingresar el ID del minor para intentar la inscripción, verificando que cumplas con la cantidad mínima de créditos aprobados.
+
+3. Menú Coordinador (Funciones de Gestión y Reporte)
+Como coordinador, tienes acceso a la administración y reportes del sistema:
+
+Reportes (Strategy): Las opciones 1 y 2 ejecutan diferentes estrategias de reporte. Por ejemplo, puedes ver la Tasa de Inscripciones (popularidad de minors) o el Reporte de Asignaturas de Alto Riesgo (la materia con más reprobaciones). Ambos reportes se muestran en una Ventana de Reporte.
+
+Gestión de Certificaciones:
+
+Modificar Certificación: Permite actualizar la descripción, los créditos requeridos y la validez en años de un minor existente.
+
+Generar Diplomas: Procesa y genera los documentos de certificación para todos los alumnos que han completado el 100% de un minor específico.
+
+Gestión de Alumnos:
+
+Mostrar Estudiantes por Minor: Genera el listado de todos los alumnos inscritos en una certificación específica.
+
+Validar Avance del Alumno: Permite recalcular el progreso de un estudiante en un minor específico, actualizando su porcentaje.
+
+4. Menú Administrador
+El menú de administración permite realizar tareas de mantenimiento del sistema: crear, modificar, eliminar y restablecer contraseñas para las cuentas de Estudiantes y Coordinadores
